@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class MentalTraitSelectionScreen extends UncloseableScreen {
-    public static final ResourceLocation FRAME = new ResourceLocation(Depression.MOD_ID, "textures/mental_trait/frame_128.png");
+    public static final ResourceLocation FRAME = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/mental_trait/frame_128.png");
     public static final int frameLength = 148;
     public static final int halfFrameLength = 74;
     public final int screenHeight = 128;
@@ -45,14 +45,14 @@ public class MentalTraitSelectionScreen extends UncloseableScreen {
         addRenderableWidget(sliderButton);
     }
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontal, double delta) {
         sliderButton.mouseScrolled(delta);
         return true;
     }
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         setSlider();
-        renderDirtBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         Minecraft minecraft = Minecraft.getInstance();
         Window window = minecraft.getWindow();

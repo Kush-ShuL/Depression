@@ -8,18 +8,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PTSDOnsetPacket {
-    public static final ResourceLocation PTSD_ONSET_PACKET = new ResourceLocation(Depression.MOD_ID, "ptsd_onset_packet");
-    public static final ResourceLocation PHOTISM_PACKET = new ResourceLocation(Depression.MOD_ID, "photism_packet");
+    public static final ResourceLocation PTSD_ONSET_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "ptsd_onset_packet");
+    public static final ResourceLocation PHOTISM_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "photism_packet");
     public static void sendToPlayer(ServerPlayer player, int onsetLevel, double distance) {
         FriendlyByteBuf ptsdBuf = new FriendlyByteBuf(Unpooled.buffer());
         ptsdBuf.writeInt(onsetLevel);
         ptsdBuf.writeDouble(distance);
-        NetworkManager.sendToPlayer(player, PTSD_ONSET_PACKET, ptsdBuf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, PTSD_ONSET_PACKET, ptsdBuf);
     }
 
     public static void sendPhotismPacket(ServerPlayer player, String id) {
         FriendlyByteBuf photismBuf = new FriendlyByteBuf(Unpooled.buffer());
         photismBuf.writeUtf(id);
-        NetworkManager.sendToPlayer(player, PHOTISM_PACKET, photismBuf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, PHOTISM_PACKET, photismBuf);
     }
 }

@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(AbstractSliderButton.class)
 public interface AbstractSliderButtonMixin {
-    @Invoker("getTextureY")
-    public int invokeGetTextureY();
-    @Invoker("getHandleTextureY")
-    public int invokeGetHandleTextureY();
+    @Invoker("getSprite")
+    public net.minecraft.resources.ResourceLocation invokeGetTextureY();
+    @Invoker("getHandleSprite")
+    public net.minecraft.resources.ResourceLocation invokeGetHandleTextureY();
 }

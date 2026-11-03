@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CrossbowItem.class)
 public abstract class CrossbowItemMixin {
-    @Inject(method = "onCrossbowShot", at = @At("TAIL"))
-    private static void onCrossbowShot(Level level, LivingEntity livingEntity, ItemStack itemStack, CallbackInfo ci) {
+    @Inject(method = "performShooting", at = @At("TAIL"))
+    private void onCrossbowShot(Level level, LivingEntity livingEntity, net.minecraft.world.InteractionHand hand, ItemStack itemStack, float velocity, float inaccuracy, LivingEntity target, CallbackInfo ci) {
         if (livingEntity instanceof ServerPlayer) {
             ServerPlayer player = (ServerPlayer) livingEntity;
             if (player.isCreative()) {

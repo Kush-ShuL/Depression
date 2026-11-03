@@ -53,7 +53,7 @@ public class PTSDManager {
     public static void addEntry(String damageSource, String soundEvent) {
         soundEventMap.computeIfAbsent(soundEvent, k -> new ArrayList<>()).add(damageSource);
         damageSourceMap.computeIfAbsent(damageSource, k -> new ArrayList<>())
-                .add(SoundEvent.createVariableRangeEvent(new ResourceLocation(soundEvent)));
+                .add(SoundEvent.createVariableRangeEvent(ResourceLocation.parse(soundEvent)));
     }
 
     public synchronized void tick(ServerPlayer player) { //每秒调用一次

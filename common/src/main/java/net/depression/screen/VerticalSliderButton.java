@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class VerticalSliderButton extends AbstractSliderButton {
-    private static final ResourceLocation SLIDER_LOCATION = new ResourceLocation("textures/gui/slider.png");
+    private static final ResourceLocation SLIDER_LOCATION = ResourceLocation.parse("textures/gui/slider.png");
     private int pixelValue; //滑块滑动的像素值
     private int screenValue; //滑块滑动的屏幕值
     private final int maxScreenValue;
@@ -40,8 +40,8 @@ public class VerticalSliderButton extends AbstractSliderButton {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         AbstractSliderButtonMixin sliderButtonMixin = (AbstractSliderButtonMixin) this;
-        guiGraphics.blitNineSliced(SLIDER_LOCATION, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, sliderButtonMixin.invokeGetTextureY());
-        guiGraphics.blitNineSliced(SLIDER_LOCATION, this.getX() , this.getY() + pixelValue, 8, sliderHeight, 20, 4, 200, 20, 0, sliderButtonMixin.invokeGetHandleTextureY());
+        guiGraphics.blitSprite(sliderButtonMixin.invokeGetTextureY(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        guiGraphics.blitSprite(sliderButtonMixin.invokeGetHandleTextureY(), this.getX(), this.getY() + pixelValue, 8, sliderHeight);
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int k = this.active ? 16777215 : 10526880;
         this.renderScrollingString(guiGraphics, minecraft.font, 2, k | Mth.ceil(this.alpha * 255.0F) << 24);

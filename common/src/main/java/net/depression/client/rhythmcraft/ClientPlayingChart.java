@@ -33,10 +33,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientPlayingChart {
-    public static final ResourceLocation PAUSE = new ResourceLocation("depression", "textures/rc_screen/modifying/pause.png");
-    public static final ResourceLocation PLAYING = new ResourceLocation("depression", "textures/rc_screen/modifying/playing.png");
-    public static final ResourceLocation FORWARD = new ResourceLocation("depression", "textures/rc_screen/modifying/forward.png");
-    public static final ResourceLocation BACKWARD = new ResourceLocation("depression", "textures/rc_screen/modifying/backward.png");
+    public static final ResourceLocation PAUSE = ResourceLocation.fromNamespaceAndPath("depression", "textures/rc_screen/modifying/pause.png");
+    public static final ResourceLocation PLAYING = ResourceLocation.fromNamespaceAndPath("depression", "textures/rc_screen/modifying/playing.png");
+    public static final ResourceLocation FORWARD = ResourceLocation.fromNamespaceAndPath("depression", "textures/rc_screen/modifying/forward.png");
+    public static final ResourceLocation BACKWARD = ResourceLocation.fromNamespaceAndPath("depression", "textures/rc_screen/modifying/backward.png");
     public SongProgressSlider songProgressSlider;
     public OffsetButton pauseButton, forwardButton, backwardButton;
     public long spaceInTicks = 1;

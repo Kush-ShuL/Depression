@@ -65,9 +65,9 @@ public abstract class PlayerMixin {
         MentalStatus mentalStatus = MentalStatus.getMentalStatusByServerPlayer(player);
         mentalStatus.mentalIllness.medicineDelay.remove("depression:insomnia_tablet");
         Boolean isInsomnia = mentalStatus.mentalIllness.isInsomnia;
-        boolean isSleepy = player.hasEffect(ModEffects.SLEEPINESS.get());
+        boolean isSleepy = player.hasEffect(ModEffects.SLEEPINESS);
         if (isSleepy) {
-            player.removeEffect(ModEffects.SLEEPINESS.get());
+            player.removeEffect(ModEffects.SLEEPINESS);
         }
         if ((!isSleepy && isInsomnia != null && isInsomnia) || mentalStatus.isMania()) { //如果失眠且没有困倦buff（或处于躁狂状态），则直接返回，不进行睡眠治疗
             return;
@@ -83,7 +83,7 @@ public abstract class PlayerMixin {
     }
 
     @Inject(method = "eat", at = @At("HEAD"))
-    private void eat(Level level, ItemStack itemStack, CallbackInfoReturnable<ItemStack> cir) {
+    private void eat(Level level, ItemStack itemStack, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
         if (level.isClientSide()) {
             return;
         }
@@ -101,11 +101,12 @@ public abstract class PlayerMixin {
             mentalStatus.mentalHeal(id, MentalStatus.foodHealValue.get(id));
         }
         else {
-            FoodProperties foodProperties = item.getFoodProperties();
-            mentalStatus.mentalHeal(id, foodProperties.getNutrition()
-                    * (1 + foodProperties.getSaturationModifier() * 2f) //获得饱食度+饱和度
-                    * foodProperties.getSaturationModifier() //乘以营养等级
-                    * MentalStatus.FOOD_HEAL_RATE); //乘以食物治疗倍率
+            float saturationModifier = foodProperties.nutrition() == 0 ? 0
+                    : foodProperties.saturation() / (foodProperties.nutrition() * 2f);
+            mentalStatus.mentalHeal(id, foodProperties.nutrition()
+                    * (1 + saturationModifier * 2f)
+                    * saturationModifier
+                    * MentalStatus.FOOD_HEAL_RATE);
         }
     }
 

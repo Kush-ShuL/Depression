@@ -34,7 +34,7 @@ public class MedicineItem extends Item {
 
     public String id;
 
-    public MobEffect effect;
+    public net.minecraft.core.Holder<MobEffect> effect;
     public int duration;
     public int amplifier;
     public int minDelay = 0; //单位: tick
@@ -42,7 +42,7 @@ public class MedicineItem extends Item {
     public String loreTranslationKey;
     private final Random random = new Random();
 
-    public MedicineItem(MobEffect effect, int duration, int amplifier, String loreTranslationKey) {
+    public MedicineItem(net.minecraft.core.Holder<MobEffect> effect, int duration, int amplifier, String loreTranslationKey) {
         super(new Properties().arch$tab(ModCreativeTabs.ITEMS_TAB));
         this.effect = effect;
         this.duration = duration;
@@ -50,7 +50,7 @@ public class MedicineItem extends Item {
         this.loreTranslationKey = loreTranslationKey;
     }
 
-    public MedicineItem(String id, MobEffect effect, int duration, int amplifier, int minDelay, int maxDelay, String loreTranslationKey) {
+    public MedicineItem(String id, net.minecraft.core.Holder<MobEffect> effect, int duration, int amplifier, int minDelay, int maxDelay, String loreTranslationKey) {
         super(new Properties().arch$tab(ModCreativeTabs.ITEMS_TAB));
         this.id = id;
         this.effect = effect;
@@ -63,7 +63,7 @@ public class MedicineItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         String string = Component.translatable(loreTranslationKey).getString();
         StringBuilder currentString = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
@@ -87,7 +87,7 @@ public class MedicineItem extends Item {
         return InteractionResultHolder.consume(itemStack);
     }
     @Override
-    public int getUseDuration(ItemStack itemStack) {
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return 32;
     }
     @Override
@@ -102,7 +102,7 @@ public class MedicineItem extends Item {
             MentalIllness mentalIllness = MentalStatus.getMentalStatusByServerPlayer(player).mentalIllness;
             if ((effectInstance != null && !effectInstance.endsWithin(duration/2))
                     || mentalIllness.medicineDelay.containsKey(id)) { //如果私自加量服药（效果剩余时间大于持续时间的一半）
-                if (itemStack.isEdible()) {
+                if (itemStack.has(net.minecraft.core.component.DataComponents.FOOD)) {
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), player.getEatingSound(itemStack), SoundSource.NEUTRAL, 1.0F, 1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
                     if (!player.getAbilities().instabuild) {
                         itemStack.shrink(1);

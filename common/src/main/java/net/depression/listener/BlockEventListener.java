@@ -57,12 +57,8 @@ public class BlockEventListener {
             }
             else {
                 ItemStack item = player.getMainHandItem();
-                if (item.isEnchanted()) {
-                    for (Tag tag : item.getEnchantmentTags()) {
-                        if (tag.getAsString().contains("minecraft:silk_touch")) {
-                            return EventResult.pass();
-                        }
-                    }
+                if (item.getEnchantments().keySet().stream().anyMatch(enchantment -> enchantment.is(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH))) {
+                    return EventResult.pass();
                 }
             }
             MentalTrait mentalTrait = mentalStatus.mentalTrait;

@@ -112,7 +112,12 @@ public class PlayingChart extends ServerLevel {
         player.lookAt(EntityAnchorArgument.Anchor.EYES, eyePos.add(direction.getX(), direction.getY(), direction.getZ()));
 
         levelFile = Platform.getGameFolder().resolve("rc_charts/" + chart.song.id + "/" + chart.levelPath + "/level.dat").toFile();
-        CompoundTag playerTag = NbtIo.readCompressed(levelFile).getCompound("Data").getCompound("Player");
+        CompoundTag levelData = NbtIo.readCompressed(levelFile.toPath(), net.minecraft.nbt.NbtAccounter.unlimitedHeap()).getCompound("Data");
+        CompoundTag playerTag = levelData.getCompound("Player");
+        int dataVersion = net.minecraft.nbt.NbtUtils.getDataVersion(playerTag,
+                net.minecraft.nbt.NbtUtils.getDataVersion(levelData, -1));
+        playerTag = net.minecraft.util.datafix.DataFixTypes.PLAYER.updateToCurrentVersion(
+                server.getFixerUpper(), playerTag, dataVersion);
         ListTag inventoryTag = playerTag.getList("Inventory", 10);
         player.getInventory().load(inventoryTag);
 
@@ -263,9 +268,11 @@ public class PlayingChart extends ServerLevel {
             super.save(progressListener, bl, bl2);
             chart.save();
             try {
-                CompoundTag levelTag = NbtIo.readCompressed(levelFile);
-                levelTag.getCompound("Data").put("Player", player.saveWithoutId(new CompoundTag()));
-                NbtIo.writeCompressed(levelTag, levelFile);
+                CompoundTag levelTag = NbtIo.readCompressed(levelFile.toPath(), net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+                CompoundTag savedPlayer = player.saveWithoutId(new CompoundTag());
+                net.minecraft.nbt.NbtUtils.addCurrentDataVersion(savedPlayer);
+                levelTag.getCompound("Data").put("Player", savedPlayer);
+                NbtIo.writeCompressed(levelTag, levelFile.toPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

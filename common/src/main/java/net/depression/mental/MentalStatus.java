@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -217,8 +217,8 @@ public class MentalStatus {
             if (!mentalIllness.isMania) { //躁狂期间精神健康值不随情绪改变
                 if (emotionValue < 0) {
                     if (mentalIllness.mentalHealthId == 4) {
-                        MobEffect antiDepression = ModEffects.ANTI_DEPRESSION.get();
-                        MobEffect antiMania = ModEffects.ANTI_MANIA.get();
+                        net.minecraft.core.Holder<MobEffect> antiDepression = ModEffects.ANTI_DEPRESSION;
+                        net.minecraft.core.Holder<MobEffect> antiMania = ModEffects.ANTI_MANIA;
                         if (player.hasEffect(antiDepression) && player.hasEffect(antiMania) && player.getEffect(antiMania).getAmplifier() >= 2) {
                             mentalHealthValue += emotionValue * MENTAL_HEALTH_CHANGE_RATE * mentalTrait.mentalHurtMultiplier / 4;
                         }
@@ -264,10 +264,10 @@ public class MentalStatus {
             }
             double emotionModifier = emotionValue * 1.5d / 100d;
             if (combatCountdown > 0 && emotionModifier < 0) { //如果处于战斗状态且情绪比较负面，则清除速度的负面加成
-                speedModifier = new AttributeModifier("depression:speed_modifier", 0, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                speedModifier = new AttributeModifier(net.minecraft.resources.ResourceLocation.parse("depression:speed_modifier"), 0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             }
             else {
-                speedModifier = new AttributeModifier("depression:speed_modifier", emotionModifier - getMentalHealthModifier(), AttributeModifier.Operation.MULTIPLY_TOTAL);
+                speedModifier = new AttributeModifier(net.minecraft.resources.ResourceLocation.parse("depression:speed_modifier"), emotionModifier - getMentalHealthModifier(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             }
             if (emotionModifier < 0 && !mentalTrait.isBadEmotionLowerCombat) {
                 emotionModifier = 0;
@@ -275,7 +275,7 @@ public class MentalStatus {
             if (emotionModifier > 0 && !mentalTrait.isGoodEmotionHigherCombat) {
                 emotionModifier = 0;
             }
-            attributeModifier = new AttributeModifier("depression:emotion_modifier", emotionModifier - getMentalHealthModifier(), AttributeModifier.Operation.MULTIPLY_TOTAL);
+            attributeModifier = new AttributeModifier(net.minecraft.resources.ResourceLocation.parse("depression:emotion_modifier"), emotionModifier - getMentalHealthModifier(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             movementSpeed.addTransientModifier(speedModifier);
             attackDamage.addTransientModifier(attributeModifier);
             attackSpeed.addTransientModifier(attributeModifier);
@@ -417,10 +417,10 @@ public class MentalStatus {
                 int zLimit = (int) Math.sqrt(r*r - x*x - y*y);
                 for (int z = -zLimit; z <= zLimit; ++z) { // -sqrt(r*r - x*x - y*y) <= z <= sqrt(r*r - x*x - y*y)
                     BlockPos blockPos = pos.offset(x, y, z);
-                    if (level.getChunk(blockPos).getStatus().isOrAfter(ChunkStatus.FULL)) { //若该区块已加载才进行计算
+                    if (level.getChunk(blockPos).getPersistedStatus().isOrAfter(ChunkStatus.FULL)) { //若该区块已加载才进行计算
                         Block block = level.getBlockState(blockPos).getBlock();
                         if (block instanceof FlowerPotBlock) {
-                            block = ((FlowerPotBlock) block).getContent();
+                            block = ((FlowerPotBlock) block).getPotted();
                         }
                         String id = block.arch$registryName().toString();
                         Component name = block.getName();
@@ -619,14 +619,14 @@ public class MentalStatus {
         }
         if (itemStack.isEnchanted()) { //如果钓到的东西有附魔
 
-            for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(itemStack).entrySet()) {
-                Enchantment enchantment = entry.getKey();
-                int level = entry.getValue();
-                if (enchantment.isCurse()) {
-                    enchantmentHealValue -= (double) entry.getValue() / (double) enchantment.getRarity().getWeight() * level;
+            for (var entry : EnchantmentHelper.getEnchantmentsForCrafting(itemStack).entrySet()) {
+                Enchantment enchantment = entry.getKey().value();
+                int level = entry.getIntValue();
+                if (entry.getKey().is(net.minecraft.tags.EnchantmentTags.CURSE)) {
+                    enchantmentHealValue -= (double) entry.getIntValue() / (double) enchantment.getWeight() * level;
                 }
                 else {
-                    enchantmentHealValue += (double) entry.getValue() / (double) enchantment.getRarity().getWeight() * level;
+                    enchantmentHealValue += (double) entry.getIntValue() / (double) enchantment.getWeight() * level;
                 }
             }
             if (enchantmentHealValue > 0) {

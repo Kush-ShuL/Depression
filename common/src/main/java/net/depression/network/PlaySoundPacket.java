@@ -10,16 +10,16 @@ import net.minecraft.server.level.ServerPlayer;
 import java.nio.charset.StandardCharsets;
 
 public class PlaySoundPacket {
-    public static final ResourceLocation PLAY_SOUND_PACKET = new ResourceLocation(Depression.MOD_ID, "play_sound_packet");
+    public static final ResourceLocation PLAY_SOUND_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "play_sound_packet");
     public static void sendToServer(String id) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeCharSequence(id, StandardCharsets.UTF_8);
-        NetworkManager.sendToServer(PLAY_SOUND_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(PLAY_SOUND_PACKET, buf);
     }
 
     public static void sendToPLayer(String id, ServerPlayer player) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeCharSequence(id, StandardCharsets.UTF_8);
-        NetworkManager.sendToPlayer(player, PLAY_SOUND_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, PLAY_SOUND_PACKET, buf);
     }
 }

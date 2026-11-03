@@ -14,20 +14,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class RhythmCraftPacket {
-    public static final ResourceLocation READ_CHART_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_read_chart_packet");
-    public static final ResourceLocation READY_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_ready_packet");
-    public static final ResourceLocation PLAY_SONG_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_play_song_packet");
-    public static final ResourceLocation PROFILE_REQUEST_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_profile_request_packet");
-    public static final ResourceLocation PROFILE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_profile_packet");
-    public static final ResourceLocation ACCEPT_EDIT_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_accept_edit_packet");
-    public static final ResourceLocation NOTE_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_note_change_packet");
-    public static final ResourceLocation PAUSE_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_pause_packet");
-    public static final ResourceLocation PROGRESS_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_progress_change_packet");
-    public static final ResourceLocation GAMEPLAY_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_gameplay_change_packet");
-    public static final ResourceLocation SPACE_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_space_change_packet");
-    public static final ResourceLocation TIME_CHANGE_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_time_change_packet");
-    public static final ResourceLocation GAME_END_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_game_end_packet");
-    public static final ResourceLocation LOAD_BACK_PACKET = new ResourceLocation(Depression.MOD_ID, "rc_load_back_packet");
+    public static final ResourceLocation READ_CHART_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_read_chart_packet");
+    public static final ResourceLocation READY_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_ready_packet");
+    public static final ResourceLocation PLAY_SONG_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_play_song_packet");
+    public static final ResourceLocation PROFILE_REQUEST_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_profile_request_packet");
+    public static final ResourceLocation PROFILE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_profile_packet");
+    public static final ResourceLocation ACCEPT_EDIT_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_accept_edit_packet");
+    public static final ResourceLocation NOTE_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_note_change_packet");
+    public static final ResourceLocation PAUSE_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_pause_packet");
+    public static final ResourceLocation PROGRESS_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_progress_change_packet");
+    public static final ResourceLocation GAMEPLAY_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_gameplay_change_packet");
+    public static final ResourceLocation SPACE_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_space_change_packet");
+    public static final ResourceLocation TIME_CHANGE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_time_change_packet");
+    public static final ResourceLocation GAME_END_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_game_end_packet");
+    public static final ResourceLocation LOAD_BACK_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "rc_load_back_packet");
 
     public static void sendReadChart(String songId, int difficulty, boolean isEditMode) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
@@ -35,20 +35,20 @@ public class RhythmCraftPacket {
         buf.writeCharSequence(songId, StandardCharsets.UTF_8);
         buf.writeInt(difficulty);
         buf.writeBoolean(isEditMode);
-        NetworkManager.sendToServer(READ_CHART_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(READ_CHART_PACKET, buf);
     }
     public static void sendReady() {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        NetworkManager.sendToServer(READY_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(READY_PACKET, buf);
     }
     public static void sendPlaySong(ServerPlayer player, String id) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeCharSequence(id, StandardCharsets.UTF_8);
-        NetworkManager.sendToPlayer(player, PLAY_SONG_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, PLAY_SONG_PACKET, buf);
     }
     public static void sendProfileRequest() {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        NetworkManager.sendToServer(PROFILE_REQUEST_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(PROFILE_REQUEST_PACKET, buf);
     }
     public static void sendProfileS2C(RhythmCraftProfile profile, ServerPlayer player) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
@@ -65,7 +65,7 @@ public class RhythmCraftPacket {
                 buf.writeInt(score);
             }
         }
-        NetworkManager.sendToPlayer(player, PROFILE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, PROFILE_PACKET, buf);
     }
     public static void sendProfileUpdateC2S(RhythmCraftProfile profile, ProfileDataType type) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
@@ -83,39 +83,39 @@ public class RhythmCraftPacket {
                 buf.writeInt(profile.index);
                 break;
         }
-        NetworkManager.sendToServer(PROFILE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(PROFILE_PACKET, buf);
     }
     public static void sendAcceptEdit(ServerPlayer player) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        NetworkManager.sendToPlayer(player, ACCEPT_EDIT_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, ACCEPT_EDIT_PACKET, buf);
     }
 
     public static void sendNoteChange(ServerPlayer player, BlockPos pos, boolean isAdd) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
         buf.writeBoolean(isAdd);
-        NetworkManager.sendToPlayer(player, NOTE_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, NOTE_CHANGE_PACKET, buf);
     }
     public static void sendPauseChange(long tick) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeLong(tick);
-        NetworkManager.sendToServer(PAUSE_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(PAUSE_CHANGE_PACKET, buf);
     }
     public static void sendProgressChange(long tick) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeLong(tick);
-        NetworkManager.sendToServer(PROGRESS_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(PROGRESS_CHANGE_PACKET, buf);
     }
     public static void sendTimeChange(ServerPlayer player, long tick) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeLong(tick);
-        NetworkManager.sendToPlayer(player, TIME_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, TIME_CHANGE_PACKET, buf);
     }
     public static void sendGameplayChange(ServerPlayer player, int score, int combo) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeInt(score);
         buf.writeInt(combo);
-        NetworkManager.sendToPlayer(player, GAMEPLAY_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, GAMEPLAY_CHANGE_PACKET, buf);
     }
 
     public static void sendGameEnd(ServerPlayer player, int score, int hits, int prevBest) {
@@ -123,16 +123,16 @@ public class RhythmCraftPacket {
         buf.writeInt(score);
         buf.writeInt(hits);
         buf.writeInt(prevBest);
-        NetworkManager.sendToPlayer(player, GAME_END_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, GAME_END_PACKET, buf);
     }
 
     public static void sendLoadBack() {
-        NetworkManager.sendToServer(LOAD_BACK_PACKET, new FriendlyByteBuf(Unpooled.buffer()));
+        net.depression.network.PacketBuffers.sendToServer(LOAD_BACK_PACKET, new FriendlyByteBuf(Unpooled.buffer()));
     }
 
     public static void sendSpaceChange(ServerPlayer player, int space) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeInt(space);
-        NetworkManager.sendToPlayer(player, SPACE_CHANGE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, SPACE_CHANGE_PACKET, buf);
     }
 }

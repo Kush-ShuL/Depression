@@ -34,7 +34,7 @@ public class ClientMentalStatus {
     public ClientPTSDManager ptsdManager = new ClientPTSDManager();
     public String mentalIllnessString;
     public final double mentalHealthMaxValue = 100d;
-    private static final ResourceLocation EMOTION = new ResourceLocation(Depression.MOD_ID, "textures/gui/emotion.png");
+    private static final ResourceLocation EMOTION = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/gui/emotion.png");
 
     public void reset() {
         emotionValue = 0d;
@@ -83,7 +83,7 @@ public class ClientMentalStatus {
         Player player = minecraft.player;
 
         if (ClientDiaryUpdater.curDiaryItem != null) { //打开日记
-            minecraft.setScreen(new BookViewScreen(new DiaryAccess(ClientDiaryUpdater.curDiaryItem)));
+            minecraft.setScreen(new DiaryAccess(ClientDiaryUpdater.curDiaryItem));
             ClientDiaryUpdater.curDiaryItem = null;
         }
 

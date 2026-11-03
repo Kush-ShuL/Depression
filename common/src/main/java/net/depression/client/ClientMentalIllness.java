@@ -15,9 +15,9 @@ public class ClientMentalIllness {
     public boolean isCloseEye = false;
     public double elapsedTime; //经过的时间(-60 tick ~ 60 tick) 0~10:闭合; 10~50:全闭眼; 50~60:睁眼
     public static final int priority = 300;
-    public static final ResourceLocation DROWSY_UP = new ResourceLocation(Depression.MOD_ID, "textures/symptom/drowsy_up.png");
-    public static final ResourceLocation DROWSY_DOWN = new ResourceLocation(Depression.MOD_ID, "textures/symptom/drowsy_down.png");
-    public static final ResourceLocation DROWSY_FULL = new ResourceLocation(Depression.MOD_ID, "textures/symptom/drowsy_full.png");
+    public static final ResourceLocation DROWSY_UP = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/drowsy_up.png");
+    public static final ResourceLocation DROWSY_DOWN = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/drowsy_down.png");
+    public static final ResourceLocation DROWSY_FULL = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/drowsy_full.png");
 
     public void receiveCloseEyePacket(FriendlyByteBuf buf, NetworkManager.PacketContext packetContext) {
         Minecraft minecraft = Minecraft.getInstance();

@@ -44,9 +44,9 @@ public class ClientPTSDManager {
     private final Random random = new Random();
     public static ConcurrentHashMap<String, ConcurrentLinkedDeque<Pair<Entity, Long>>> falseEntities = new ConcurrentHashMap<>();
 
-    public static final ResourceLocation PTSD_ONSET_LEFT = new ResourceLocation(Depression.MOD_ID, "textures/symptom/ptsd_onset_left.png");
-    public static final ResourceLocation PTSD_ONSET_RIGHT = new ResourceLocation(Depression.MOD_ID, "textures/symptom/ptsd_onset_right.png");
-    public static final ResourceLocation PTSD_ONSET_UP = new ResourceLocation(Depression.MOD_ID, "textures/symptom/ptsd_onset_up.png");
+    public static final ResourceLocation PTSD_ONSET_LEFT = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/ptsd_onset_left.png");
+    public static final ResourceLocation PTSD_ONSET_RIGHT = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/ptsd_onset_right.png");
+    public static final ResourceLocation PTSD_ONSET_UP = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "textures/symptom/ptsd_onset_up.png");
     public void receivePTSDOnsetPacket(FriendlyByteBuf buf, NetworkManager.PacketContext packetContext) {
         int level = buf.readInt();
         if (level > 0) {
@@ -176,7 +176,7 @@ public class ClientPTSDManager {
                 mob.getLookControl().setLookAt(player, 0f, 0f);
                 mob.getMoveControl().setWantedPosition(player.getX(), player.getY(), player.getZ(), 0d);
             }
-            falseEntities.computeIfAbsent(level.dimensionTypeId().location().toString(), key -> new ConcurrentLinkedDeque<>())
+            falseEntities.computeIfAbsent(level.dimension().location().toString(), key -> new ConcurrentLinkedDeque<>())
                     .add(new Pair<>(entity, level.getGameTime()));
         });
     }

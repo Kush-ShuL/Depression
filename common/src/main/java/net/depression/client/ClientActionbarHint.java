@@ -81,7 +81,7 @@ public class ClientActionbarHint {
             return;
         }
         fishHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.fish_heal_hint_1")
                 .append(id)
@@ -97,7 +97,7 @@ public class ClientActionbarHint {
             return;
         }
         feedAnimalHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.feed_animal_heal_hint_1")
                 .append(id)
@@ -113,7 +113,7 @@ public class ClientActionbarHint {
             return;
         }
         petHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.pet_heal_hint_1")
                 .append(id)
@@ -142,7 +142,7 @@ public class ClientActionbarHint {
             return;
         }
         nearbyBlockHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.nearby_block_heal_hint_1")
                 .append(id)
@@ -157,7 +157,7 @@ public class ClientActionbarHint {
             return;
         }
         breakBlockHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.break_block_heal_hint_1")
                 .append(id)
@@ -172,7 +172,7 @@ public class ClientActionbarHint {
             return;
         }
         killEntityHealLastTime = curTime;
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         Gui gui = Minecraft.getInstance().gui;
         gui.setOverlayMessage(Component.translatable("message.depression.kill_entity_heal_hint_1")
                 .append(id)
@@ -185,7 +185,7 @@ public class ClientActionbarHint {
         if (minecraft.level == null) {
             return;
         }
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         long time = minecraft.level.getGameTime();
         if (time - formLastTime < 20 && !id.equals(formLastId)) { //1s内如果有多个不同的提示包，则合并显示
             gui.setOverlayMessage(Component.translatable(formHint1)
@@ -209,7 +209,7 @@ public class ClientActionbarHint {
         if (minecraft.level == null) {
             return;
         }
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         long time = minecraft.level.getGameTime();
         if (time - disperseLastTime < 20 && !id.equals(disperseLastId)) { //1s内如果有多个不同的提示包，则合并显示
             gui.setOverlayMessage(Component.translatable(disperseHint1)
@@ -233,7 +233,7 @@ public class ClientActionbarHint {
         if (minecraft.level == null) {
             return;
         }
-        Component id = buf.readComponent();
+        Component id = net.minecraft.network.chat.ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf);
         long time = minecraft.level.getGameTime();
         if (!id.equals(remissionLastId) && time - remissionLastTime < 20) { //1s内如果有多个不同的提示包，则合并显示
             gui.setOverlayMessage(Component.translatable(remissionHint1)

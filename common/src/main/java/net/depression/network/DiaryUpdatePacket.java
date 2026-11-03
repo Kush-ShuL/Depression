@@ -14,13 +14,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class DiaryUpdatePacket {
-    public static final ResourceLocation DIARY_UPDATE_PACKET = new ResourceLocation(Depression.MOD_ID, "diary_update_packet");
+    public static final ResourceLocation DIARY_UPDATE_PACKET = ResourceLocation.fromNamespaceAndPath(Depression.MOD_ID, "diary_update_packet");
     public static Charset charset = StandardCharsets.UTF_8;
 
     public static void sendToServer(String content) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeCharSequence(content, charset);
-        NetworkManager.sendToServer(DIARY_UPDATE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToServer(DIARY_UPDATE_PACKET, buf);
     }
 
     public static void sendToPlayer(ServerPlayer player) {
@@ -98,6 +98,6 @@ public class DiaryUpdatePacket {
             }
         }
         buf.writeCharSequence(content, charset);
-        NetworkManager.sendToPlayer(player, DIARY_UPDATE_PACKET, buf);
+        net.depression.network.PacketBuffers.sendToPlayer(player, DIARY_UPDATE_PACKET, buf);
     }
 }

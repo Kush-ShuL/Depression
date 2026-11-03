@@ -16,8 +16,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class ComputerBlock extends HorizontalDirectionalBlock {
+    public static final com.mojang.serialization.MapCodec<ComputerBlock> CODEC = simpleCodec(ComputerBlock::new);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
+
     public ComputerBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).forceSolidOn().noOcclusion());
+        this(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).forceSolidOn().noOcclusion());
+    }
+
+    private ComputerBlock(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
     }

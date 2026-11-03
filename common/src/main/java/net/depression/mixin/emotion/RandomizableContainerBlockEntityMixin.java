@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(RandomizableContainerBlockEntity.class)
-public abstract class RandomizableContainerBlockEntityMixin {
+@Mixin(net.minecraft.world.RandomizableContainer.class)
+public interface RandomizableContainerBlockEntityMixin {
     @Inject(method = "unpackLootTable", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/advancements/critereon/LootTableTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/resources/ResourceLocation;)V"))
+            target = "Lnet/minecraft/advancements/critereon/LootTableTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/resources/ResourceKey;)V"))
     private void onUnpackLootTable(Player player, CallbackInfo ci) {
         TempValues.lootPlayer = (ServerPlayer) player;
     }

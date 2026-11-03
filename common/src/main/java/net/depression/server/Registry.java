@@ -119,7 +119,7 @@ public class Registry {
     public static void receiveDiaryUpdatePacket(FriendlyByteBuf buf, NetworkManager.PacketContext packetContext) {
         ItemStack diary = diaryUpdateMap.get(packetContext.getPlayer().getUUID());
         CharSequence rawContent = buf.readCharSequence(buf.readableBytes(), DiaryUpdatePacket.charset);
-        CompoundTag compoundTag = diary.getOrCreateTag();
+        CompoundTag compoundTag = net.depression.item.diary.DiaryData.read(diary);
         ListTag oldPages = compoundTag.getList("pages", 8);
         ListTag pages = new ListTag();
         StringBuilder pageContent = new StringBuilder();
@@ -138,7 +138,7 @@ public class Registry {
             pages.remove(pages.size()-1);
         }
         compoundTag.put("pages", pages);
-        diary.setTag(compoundTag);
+        net.depression.item.diary.DiaryData.write(diary, compoundTag);
         diaryUpdateMap.remove(packetContext.getPlayer().getUUID());
     }
 }

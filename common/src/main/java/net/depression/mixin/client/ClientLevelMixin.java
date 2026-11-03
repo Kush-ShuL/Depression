@@ -63,7 +63,7 @@ public abstract class ClientLevelMixin {
         }
     }
 
-    @Inject(method = "playLocalSound", at = @At("HEAD"))
+    @Inject(method = "playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V", at = @At("HEAD"))
     private void playLocalSound(double d, double e, double f, SoundEvent soundEvent, SoundSource soundSource, float g, float h, boolean bl, CallbackInfo ci) {
         String id = soundEvent.getLocation().toString();
         if (PTSDManager.soundEventMap.containsKey(id)) {

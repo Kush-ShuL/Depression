@@ -5,7 +5,6 @@ import dev.architectury.event.events.common.*;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.depression.block.ModBlocks;
-import net.depression.block.entity.ModBannerPatterns;
 import net.depression.config.ServerConfig;
 import net.depression.effect.ModEffects;
 import net.depression.item.ModCreativeTabs;
@@ -32,12 +31,42 @@ import java.util.ServiceLoader;
 
 public final class Depression {
     public static final String MOD_ID = "depression";
-    public static final String MOD_VERSION = "0.2.2+1.20.1";
+    public static final String MOD_VERSION = "0.2.3+1.21.1";
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void init() {
-        ModBannerPatterns.register();
+        if (dev.architectury.platform.Platform.getEnvironment() == dev.architectury.utils.Env.SERVER) {
+            NetworkManager.registerS2CPayloadType(net.depression.network.MentalStatusPacket.EMOTION_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.MentalStatusPacket.MENTAL_HEALTH_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.OVERDOSE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.BIPOLAR_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.NEARBY_BLOCK_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.BREAK_BLOCK_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.KILL_ENTITY_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.FISH_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.FEED_ANIMAL_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.PET_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.LOOT_HEAL_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.PTSD_FROM_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.PTSD_DISPERSE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.PTSD_REMISSION_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.INSOMNIA_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.ActionbarHintPacket.MENTAL_FATIGUE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.CloseEyePacket.CLOSE_EYE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.PTSDOnsetPacket.PTSD_ONSET_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.DiaryUpdatePacket.DIARY_UPDATE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.PTSDOnsetPacket.PHOTISM_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.MentalTraitPacket.MENTAL_TRAIT_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.PROFILE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.PLAY_SONG_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.ACCEPT_EDIT_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.NOTE_CHANGE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.GAMEPLAY_CHANGE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.TIME_CHANGE_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.GAME_END_PACKET);
+            NetworkManager.registerS2CPayloadType(net.depression.network.RhythmCraftPacket.SPACE_CHANGE_PACKET);
+        }
         ModEffects.register(); //必须先注册效果（因为物品使用了效果），否则物品注册时会报错
         ModBlocks.register();
         ModItems.register();
@@ -46,25 +75,25 @@ public final class Depression {
         VillageAdditions.register();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                MentalTraitPacket.MENTAL_TRAIT_PACKET, Registry::receiveMentalTraitPacket);
+                net.depression.network.PacketBuffers.serverboundId(MentalTraitPacket.MENTAL_TRAIT_PACKET), Registry::receiveMentalTraitPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                DiaryUpdatePacket.DIARY_UPDATE_PACKET, Registry::receiveDiaryUpdatePacket);
+                net.depression.network.PacketBuffers.serverboundId(DiaryUpdatePacket.DIARY_UPDATE_PACKET), Registry::receiveDiaryUpdatePacket);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                PlaySoundPacket.PLAY_SOUND_PACKET, PTSDManager::receivePlaySoundPacket);
+                net.depression.network.PacketBuffers.serverboundId(PlaySoundPacket.PLAY_SOUND_PACKET), PTSDManager::receivePlaySoundPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.PROFILE_REQUEST_PACKET, RhythmCraftProfile::onReceiveRequest);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.PROFILE_REQUEST_PACKET), RhythmCraftProfile::onReceiveRequest);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.PROFILE_PACKET, RhythmCraftProfile::onReceiveProfileUpdate);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.PROFILE_PACKET), RhythmCraftProfile::onReceiveProfileUpdate);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.READ_CHART_PACKET, PlayingChart::onReceiveReadChart);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.READ_CHART_PACKET), PlayingChart::onReceiveReadChart);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.READY_PACKET, PlayingChart::onReceiveReady);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.READY_PACKET), PlayingChart::onReceiveReady);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.LOAD_BACK_PACKET, PlayingChart::onReceiveLoadBack);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.LOAD_BACK_PACKET), PlayingChart::onReceiveLoadBack);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.PAUSE_CHANGE_PACKET, PlayingChart::onReceivePauseChange);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.PAUSE_CHANGE_PACKET), PlayingChart::onReceivePauseChange);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S,
-                RhythmCraftPacket.PROGRESS_CHANGE_PACKET, PlayingChart::onReceiveProgressChange);
+                net.depression.network.PacketBuffers.serverboundId(RhythmCraftPacket.PROGRESS_CHANGE_PACKET), PlayingChart::onReceiveProgressChange);
 
         CommandRegistrationEvent.EVENT.register(CommandRegistrationListener::registerCommands);
         PlayerEvent.SMELT_ITEM.register(PlayerEventListener::onSmeltItem);

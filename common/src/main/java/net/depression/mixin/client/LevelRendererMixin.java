@@ -19,7 +19,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.chunk.ChunkStatus;
+
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -46,7 +46,9 @@ public abstract class LevelRendererMixin {
 
     @Shadow @Final private Minecraft minecraft;
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;entitiesForRendering()Ljava/lang/Iterable;"))
-    private void renderFalseEntities(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
+    private void renderFalseEntities(net.minecraft.client.DeltaTracker deltaTracker, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f viewMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+        PoseStack poseStack = new PoseStack();
+        poseStack.mulPose(viewMatrix);
         if (level == null) {
             return;
         }

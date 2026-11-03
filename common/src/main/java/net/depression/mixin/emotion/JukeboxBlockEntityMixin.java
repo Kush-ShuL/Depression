@@ -17,23 +17,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(JukeboxBlockEntity.class)
 public abstract class JukeboxBlockEntityMixin {
-    @Unique
-    private long tickCount = -1;
     @Inject(method = "tick", at = @At("TAIL"))
-    private void tick(Level level, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+    private static void tick(Level level, BlockPos blockPos, BlockState blockState, JukeboxBlockEntity jukebox, CallbackInfo ci) {
         if (level.isClientSide())
             return;
-        if (++tickCount % 20 != 0)
+        if (level.getGameTime() % 20 != 0)
             return;
-        JukeboxBlockEntity jukebox = (JukeboxBlockEntity) (Object) this;
-        if (!jukebox.isRecordPlaying()) {
+        if (!jukebox.getSongPlayer().isPlaying()) {
             return;
         }
         ServerLevel serverLevel = (ServerLevel) level;
         for (ServerPlayer player : serverLevel.players()) {
             if (player.position().distanceTo(jukebox.getBlockPos().getCenter()) <= 65) {
                 MentalStatus mentalStatus = MentalStatus.getMentalStatusByServerPlayer(player);
-                mentalStatus.mentalHeal(jukebox.getFirstItem().getItem().arch$registryName().toString(), 1);
+                mentalStatus.mentalHeal(jukebox.getTheItem().getItem().arch$registryName().toString(), 1);
                 MentalStatusPacket.sendToPlayer(player, mentalStatus);
             }
         }

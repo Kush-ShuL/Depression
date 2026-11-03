@@ -93,11 +93,11 @@ public class DepressionClient {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C,
                 RhythmCraftPacket.SPACE_CHANGE_PACKET, ClientPlayingChart::receiveSpaceChangePacket);
 
-        ClientGuiEvent.RENDER_HUD.register(clientMentalStatus::renderHud);
-        ClientGuiEvent.RENDER_HUD.register(GameGuiRenderer::renderHud);
+        ClientGuiEvent.RENDER_HUD.register((graphics, delta) -> clientMentalStatus.renderHud(graphics, delta.getGameTimeDeltaPartialTick(false)));
+        ClientGuiEvent.RENDER_HUD.register((graphics, delta) -> GameGuiRenderer.renderHud(graphics, delta.getGameTimeDeltaPartialTick(false)));
         ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(ClientLifecycleEventListener::onClientLevelLoad);
         ClientLifecycleEvent.CLIENT_STOPPING.register(ClientLifecycleEventListener::onClientStopping);
-        ClientRawInputEvent.MOUSE_SCROLLED.register(ClientRawInputEventListener::onMouseScrolled);
+        ClientRawInputEvent.MOUSE_SCROLLED.register((minecraft, horizontal, vertical) -> ClientRawInputEventListener.onMouseScrolled(minecraft, vertical));
         ClientRawInputEvent.MOUSE_CLICKED_PRE.register(ClientRawInputEventListener::onMouseClicked);
         ClientTickEvent.CLIENT_LEVEL_PRE.register(ClientTickEventListener::onClientLevelTick);
         ClientTickEvent.CLIENT_PRE.register(ClientTickEventListener::onClientTick);

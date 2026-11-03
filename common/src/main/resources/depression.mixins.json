@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.depression.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
     "client.AbstractSliderButtonMixin",
@@ -50,8 +50,7 @@
     "rhythmcraft.SaplingBlockMixin",
     "symptom.BowItemMixin",
     "symptom.CrossbowItemMixin",
-    "symptom.ItemStackMixin",
-    "symptom.LivingEntityMixin"
+    "symptom.ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

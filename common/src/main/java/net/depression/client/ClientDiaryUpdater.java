@@ -33,7 +33,7 @@ public class ClientDiaryUpdater {
     public static InteractionHand interactionHand;
     public static ItemStack curDiaryItem;
     public static Random random = new Random();
-    public static final ResourceLocation writeSound = new ResourceLocation( "assets/diary_sound/write_diary");
+    public static final ResourceLocation writeSound = ResourceLocation.parse( "assets/diary_sound/write_diary");
 
     public static void clear() {
         diaryItem = null;
@@ -108,7 +108,7 @@ public class ClientDiaryUpdater {
         boolean isLatin = Component.translatable("diary.depression.is_latin").getString().equals("true");
 
         ItemStack itemStack = player.getItemInHand(interactionHand);
-        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        CompoundTag compoundTag = net.depression.item.diary.DiaryData.read(itemStack);
         ListTag listTag = new ListTag();
         StringBuilder pageBuilder = new StringBuilder();
         StringBuilder sentToServerContent = new StringBuilder();
@@ -152,7 +152,7 @@ public class ClientDiaryUpdater {
         ListTag oldListTag = compoundTag.getList("pages", 8);
         listTag.addAll(oldListTag);
         compoundTag.put("pages", listTag);
-        itemStack.setTag(compoundTag);
+        net.depression.item.diary.DiaryData.write(itemStack, compoundTag);
         //打开日记界面
         curDiaryItem = itemStack;
         //向服务器发送更新
